@@ -3,11 +3,31 @@
 	
 	require_once __DIR__.'/helper.php';
 	
+
+
+
+
+	if ($params->def('prepare_content', 1))
+	{
+		JPluginHelper::importPlugin('content');
+		$module->content = JHtml::_('content.prepare', $module->content, '', 'mod_custom.content');
+	}
+
+	
+	$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'), ENT_COMPAT, 'UTF-8');
+
+	echo $params->get('prefiksID');
+
+	require JModuleHelper::getLayoutPath('mod_custom', $params->get('layout', 'default'));
+
+
+
 	//require JModuleHelper::getLayoutPath('mod_LandingButton', $params->get ('layout', 'default'));
 	
-	jimport( 'joomla.application.module.helper' ); // подключаем нужный класс, один раз на странице, перед первым выводом
-	$module = JModuleHelper::getModule('mod_landingbutton'); // получаем объект модуля, mod_module - имя модуля в папке modules
-	$param = json_decode($module->params); // декодирует JSON с параметрами модуля
+//	jimport( 'joomla.application.module.helper' ); // подключаем нужный класс, один раз на странице, перед первым выводом
+//	$module = "";
+//	$module = JModuleHelper::getModule('mod_landingbutton'); // получаем объект модуля, mod_module - имя модуля в папке modules
+//	$param = json_decode($module->params); // декодирует JSON с параметрами модуля
 
 	$document = JFactory::getDocument();
 	$document->addStyleSheet(JURI::base().'/templates/expertmusic/local/css/phonecode.css');
@@ -16,12 +36,11 @@
 //$leadID = "8e318db7-43fa-420c-85d0-954b23eb210b";//test
 //$leadID = "1e50ba20-2d8a-4533-824b-75c263c6cb3d";//prod
 //$param->textFormaOtrasl
-$modIdName = "id-name" . $param->prefiksID;
-//echo $modIdName;
-$modIdEmail = "idEmail" . $module->id;
-$modIdPhone = "idPhone" . $module->id;
-$modIdCompany = "idCompany" . $module->id;
-$modIdIndustry = "idIndustry" . $module->id;
+$modIdName = "id-name" . $params->get('prefiksID');//$param->prefiksID;
+$modIdEmail = "idEmail" . $params->get('prefiksID');//$param->prefiksID;
+$modIdPhone = "idPhone" . $params->get('prefiksID');//$param->prefiksID;
+$modIdCompany = "idCompany" . $params->get('prefiksID');//$param->prefiksID;
+$modIdIndustry = "idIndustry" . $params->get('prefiksID');//$param->prefiksID;
 
 /*
 Вывод поля компания
@@ -31,7 +50,7 @@ $modIdIndustry = "idIndustry" . $module->id;
 Вывод поля сфера деятельности
 */
 ?>
-
+<script>var flagScript = "";</script>
 <div style="height:450px;">
 	<div class="your-order-container subscribe-page-customers" style="background: url() !important; paddong: 0px;padding-top:70px;">
 	    <div class="your-order-container-inner">
@@ -39,7 +58,7 @@ $modIdIndustry = "idIndustry" . $module->id;
 	            <div class="col-xs-12 col-xs-offset-0 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
 	                <div class="call-us-container-form bg-white ">
 					<p class="text-center">
-						<?php if($param->textNadFormoi != 1): ?>
+						<?php if($params->get('textNadFormoi') != 1): ?>
 							Получать материалы и приглашения на следующие вебинары
 						<?php endif; ?>
 					</p>
@@ -47,46 +66,52 @@ $modIdIndustry = "idIndustry" . $module->id;
 						<input type="hidden" id ="landingID" value="<?php //echo $param->landingID; ?>">
 	                	<input type="hidden" id ="em-check" name ="em-check" value="true">
 		                <div class="call-us-input-error-msg">
-							<?php if($param->textFormaFIO != 1): ?>
+							<?php if($params->get('textFormaFIO') != 1): ?>
 								<span class = "input-error obligation">Поле обязательно к заполнению</span>	
 								<span class = "input-error incorrect">Поле заполнено неверно</span>	
-								<label class = "hidden" for = "call-us-input-name">Ваше имя<span class="form-required">*</span></label>    
-								<input type="text" class="call-us-input" id ="call-us-input-name" name = "call-us-input-name" placeholder="ФИО">
+								<label class = "hidden" for = "<?php echo $modIdName; //call-us-input-name ?>">Ваше имя<span class="form-required">*</span></label>    
+								<input type="text" class="call-us-input" id ="<?php echo $modIdName; //call-us-input-name?>" name = "<?php echo $modIdName; //call-us-input-name ?>" placeholder="ФИО">
 							<?php endif; ?>
 		                </div>
 						 <div class="call-us-input-error-msg call-us-input-company">
-						 	<?php if($param->textFormaCompania != 1):?>
+						 	<?php if($params->get('textFormaCompania') != 1):?>
 								<span class = "input-error obligation">Поле обязательно к заполнению</span>	
-								<label class = "hidden" for = "call-us-input-company">Название компании<span class="form-required">*</span></label>
-								<input type="text" class="call-us-input" id ="call-us-input-company" name = "call-us-input-company" placeholder="Название компании">
+								<label class = "hidden" for = "<?php echo $modIdCompany; //call-us-input-company ?>">Название компании<span class="form-required">*</span></label>
+								<input type="text" class="call-us-input" id ="<?php echo $modIdCompany; //call-us-input-company ?>" name = "<?php echo $modIdCompany; //call-us-input-company ?>" placeholder="Название компании">
 							<?php endif; ?>
 		                </div>
 						<div class="call-us-input-country call-us-input-error-msg">
-							<?php if($param->textFormaSferaDeyatelnosti != 1):?>
-								<input type="hidden" id ="your-order-activity-lead">
-								<span class = "input-error obligation">Поле обязательно к заполнению</span>
-								<select class="call-us-input" size="0" name="call-us-container-form-country" >
-									<option disabled selected> Отрасль</option>
-									<option value="Рестораны" >Рестораны</option>
-									<option value="Магазины" >Магазины</option>
-									<option value="Сфера услуг" >Сфера услуг</option>
+							<?php if($params->get('textFormaSferaDeyatelnosti') != 1):?>
+								<span class="input-error obligation">Поле обязательно к заполнению</span>
+								<span class="input-error incorrect">Поле заполнено неверно</span>
+								<select class="call-us-input" id="em-ajax-category" name="call-us-container-form-category" size="0">
+									<option disabled="disabled" value="0">Сфера деятельности</option>
+									<option value="5382639E-D35A-4DE0-8D97-027B5692C4AD">Production</option>
+									<option value="4919DFAA-BEE8-4AF9-B0BB-4F0F6B51E9F1">Магазины</option>
+									<option value="1C0DFBCA-1D1E-4E52-B143-1F06B6CA8A32">Рестораны</option>
+									<option value="AD04C262-6F9E-4E5F-940C-F35514E1FB46">Красота и здоровье</option>
+									<option value="1D1E63D4-781F-460B-95E3-C2C3AD812370">Отели</option>
+									<option selected="selected" value="92D9B546-3541-41CC-832E-0744A44B3EB5">Прочее</option>
+									<option value="90C23CD9-ECB3-4130-BB61-13F1E940785A">Развлечения</option>
+									<option value="4B48EDB0-7B7B-4FFB-A3B3-685ED4CAE273">Сфера услуг</option>
 								</select>
+								<input class="call-us-input" id="<?php echo $modIdIndustry; //categoryField ?>" name="<?php echo $modIdIndustry; //categoryField ?>" type="hidden" value="" />
 							<?php endif; ?>	
 						</div>
-						<?php if($param->textFormaTelefon != 1):?>
-							<input type="text" class="call-us-input em-flags" id ="call-us-input-phone" name = "call-us-input-phone" placeholder="Телефон">
+						<?php if($params->get('textFormaTelefon') != 1):?>
+							<input type="text" class="call-us-input em-flags" id ="<?php echo $modIdPhone; //call-us-input-phone ?>" name = "<?php echo $modIdPhone; //call-us-input-phone ?>" placeholder="Телефон">
 							<input type ="hidden" id = "em-prefics-phone-helper" name = "em-prefics-phone-helper" value="+"/>
 						<?php endif; ?>
 						<div class="call-us-input-error-msg">
-							<?php if($param->textFormaMail != 1): ?>
+							<?php if($params->get('textFormaMail') != 1): ?>
 								<span class = "input-error obligation">Поле обязательно к заполнению</span>
 								<span class = "input-error incorrect">Поле заполнено неверно</span>
-								<label class = "hidden" for = "call-us-input-mail">Адрес электронной почты<span class="form-required">*</span></label>
-								<input type="text" class="call-us-input" id ="call-us-input-mail" name = "call-us-input-mail" placeholder="Адрес электронной почты">
+								<label class = "hidden" for = "<?php echo $modIdEmail; //call-us-input-mail ?>">Адрес электронной почты<span class="form-required">*</span></label>
+								<input type="text" class="call-us-input" id ="<?php echo $modIdEmail; //call-us-input-mail ?>" name = "<?php echo $modIdEmail; //call-us-input-mail ?>" placeholder="Адрес электронной почты">
 							<?php endif; ?>
 		                </div> 	
 		                <div class="call-us-submit-button">
-		                     <input type="button" onSubmit="createObject(); return false" class="btn im-btn-blue" id ="call-us-input-submit" name = "call-us-input-submit" value="<?php echo $param->testovoepole; ?>">
+		                     <input type="button" onSubmit="createObject(); return false" class="btn im-btn-blue" id ="call-us-input-submit" name = "call-us-input-submit" value="<?php echo $params->get('testovoepole'); ?>">
 		                </div>
 	                </form>
 	                </div>
@@ -115,13 +140,13 @@ $modIdIndustry = "idIndustry" . $module->id;
 */
 var config = {
     fields: {
-		"Name": "#call-us-input-name",  // Имя посетителя, заполнившего форму
-        "Email": "#call-us-input-mail", // Email посетителя
-        "MobilePhone": "#call-us-input-phone", // Телефон посетителя
-        "Company": "#call-us-input-company", // Название компании
-        "Industry": "#your-order-activity-lead", // Отрасль компании
+		"Name": "#<?php echo $modIdName; //call-us-input-name ?>",  // Имя посетителя, заполнившего форму
+        "Email": "#<?php echo $modIdEmail; //call-us-input-mail ?>", // Email посетителя
+        "MobilePhone": "#<?php echo $modIdPhone; //call-us-input-phone ?>", // Телефон посетителя
+        "Company": "#<?php echo $modIdCompany; //call-us-input-company ?>", // Название компании
+        "Industry": "#<?php echo $modIdIndustry; //your-order-activity-lead ?>", // Отрасль компании
     },
-    landingId: "<?php echo $param->landingID; //1b839c17-92aa-48a8-be92-025bdfa41e26 ?>",
+    landingId: "<?php echo $params->get('landingID'); //1b839c17-92aa-48a8-be92-025bdfa41e26 ?>",
     serviceUrl: "http://ind-bpm-tst-01/0/ServiceModel/GeneratedObjectWebFormService.svc/SaveWebFormObjectData",
     redirectUrl: ""
 };
@@ -143,15 +168,13 @@ jQuery(document).ready(initLanding)
 </script>
 
 
-
 <script>
 	//Тут есть нужные мне поля
 	//src='/templates/expertmusic/local/js/select-change.js'
-	$(document).ready(function(){$("select").change(function(){$("select").addClass("black"),$("#your-order-activity-lead").val($("select").val())})});
+	$(document).ready(function(){$("select").change(function(){$("select").addClass("black"),$("#<?php echo $modIdIndustry; //your-order-activity-lead ?>").val($("select").val())})});
 	//src='/templates/expertmusic/local/js/validation.js'
-	var submitEmCommonValidation=function(){return Lead.clear(),Lead.setFormId("your-order-form"),Lead.setLandingFieldId("landingID"),Lead.setFieldObj({fieldId:"call-us-input-name",leadName:Lead.fieldName}),Lead.setFieldObj({fieldId:"call-us-input-mail",leadName:Lead.fieldEmail}),$("*").is("#call-us-input-phone-simple")&&Lead.setFieldObj({fieldId:"call-us-input-phone-simple",leadName:Lead.fieldMobilePhone}),$("*").is("#call-us-input-phone")&&Lead.setFieldObj({fieldId:"call-us-input-phone",leadName:Lead.fieldMobilePhone}),$("*").is("#call-us-input-company-simple")&&Lead.setFieldObj({fieldId:"call-us-input-phone",leadName:Lead.fieldCompany}),$("*").is("#call-us-input-company")&&Lead.setFieldObj({fieldId:"call-us-input-company",leadName:Lead.fieldCompany}),$("*").is("#call-us-container-form-country")&&Lead.setFieldObj({fieldId:"call-us-container-form-country"}),$("*").is("#your-order-activity-lead")&&Lead.setFieldObj({fieldId:"your-order-activity-lead",leadName:Lead.fieldIndustry}),$("*").is("#your-order-activity")&&Lead.setFieldObj({fieldId:"your-order-activity"}),$("*").is("#call-us-input-question")&&Lead.setFieldObj({fieldId:"call-us-input-question"}),$("*").is("#your-order-number")&&Lead.setFieldObj({fieldId:"your-order-number"}),$("*").is("#your-order-area")&&Lead.setFieldObj({fieldId:"your-order-area"}),$("*").is("#your-order-final-price")&&Lead.setFieldObj({fieldId:"your-order-final-price"}),$("*").is("#your-order-currency")&&Lead.setFieldObj({fieldId:"your-order-currency"}),$("*").is("#question-whom")&&Lead.setFieldObj({fieldId:"question-whom"}),$("*").is("#em-check")&&Lead.setFieldObj({fieldId:"em-check"}),Lead.submit()};$(document).ready(function(){function e(e){e.removeClass("obligation-error").removeClass("incorrect-error"),e.parent(".call-us-input-error-msg").removeClass("obligation-error").removeClass("incorrect-error")}function r(){$(".call-us-input-error-msg").removeClass("obligation-error").removeClass("incorrect-error");var e=!0,r=$("#call-us-input-name");if(""==$.trim(r.val())?(r.parent().addClass("obligation-error"),e=!1):/^[A-Za-zА-Яа-яЁё\`ґєҐЄ´ІіЇї\s]+$/.test(r.val())||(r.parent().addClass("incorrect-error"),e=!1),$("*").is("#call-us-input-phone")){var a=(i=$("#call-us-input-phone")).val();a=(a=(a=a.replace(/\s/g,"")).replace(/\-/g,"")).replace(/^"+"/,""),""==$.trim(i.val())?(i.parent().addClass("obligation-error"),e=!1):/\d{8}$/.test(a)?a.length>17&&(i.parent().addClass("incorrect-error"),e=!1):(i.parent().addClass("incorrect-error"),e=!1)}if($("*").is("#call-us-input-phone-simple")){var i=$("#call-us-input-phone-simple"),l=i.val();l=(l=l.replace(/\s/g,"")).replace(/\-/g,""),""==$.trim(l)?(i.parent().addClass("obligation-error"),e=!1):/\d{8}$/.test(l)?l.length>17&&(i.parent().addClass("incorrect-error"),e=!1):(i.parent().addClass("incorrect-error"),e=!1)}var o=$("#call-us-input-mail");if(""==$.trim(o.val())?(o.parent().addClass("obligation-error"),e=!1):/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/gim.test(o.val())||(o.parent().addClass("incorrect-error"),e=!1),$("*").is("#your-order-activity-lead")){var s=$("#your-order-activity-lead");""==$.trim(s.val())&&(s.parent().addClass("obligation-error"),e=!1)}if($("*").is("#call-us-input-company")){var t=$("#call-us-input-company");""==$.trim(t.val())&&(t.parent().addClass("obligation-error"),e=!1)}if($("*").is("#call-us-input-question")){var d=$("#call-us-input-question");""==$.trim(d.val())&&(d.parent().addClass("obligation-error"),e=!1)}return e}$("#call-us-input-submit").off().on("click",function(){var e=$(this);r()&&("undefined"!=typeof emPageFunctions&&emPageFunctions(),$(e).hasClass("em-has-loader")&&($(e).hide(0),$(e).parent().find(".em-loader").show(0)),$("#your-order-form").submit())}),$(".call-us-input-error-msg").off().on("mouseover",function(){e($(this))}),$(".em-flags").off().on("mouseover",function(){e($(this))}),$(".call-us-input-error-msg input").focus(function(){e($(this))}),$(".call-us-input-error-msg select").focus(function(){e($(this))}),$(".call-us-input-error-msg textarea").focus(function(){e($(this))}),$("#call-us-input-phone").focus(function(){e($(this))})});
+	var submitEmCommonValidation=function(){return Lead.clear(),Lead.setFormId("your-order-form"),Lead.setLandingFieldId("landingID"),Lead.setFieldObj({fieldId:"<?php echo $modIdName; //call-us-input-name ?>",leadName:Lead.fieldName}),Lead.setFieldObj({fieldId:"<?php echo $modIdEmail; //call-us-input-mail ?>",leadName:Lead.fieldEmail}),$("*").is("#call-us-input-phone-simple")&&Lead.setFieldObj({fieldId:"call-us-input-phone-simple",leadName:Lead.fieldMobilePhone}),$("*").is("#<?php echo $modIdPhone; //call-us-input-phone ?>")&&Lead.setFieldObj({fieldId:"<?php echo $modIdPhone; //call-us-input-phone ?>",leadName:Lead.fieldMobilePhone}),$("*").is("#call-us-input-company-simple")&&Lead.setFieldObj({fieldId:"<?php echo $modIdPhone; //call-us-input-phone ?>",leadName:Lead.fieldCompany}),$("*").is("#<?php echo $modIdCompany; //call-us-input-company ?>")&&Lead.setFieldObj({fieldId:"<?php echo $modIdCompany; //call-us-input-company ?>",leadName:Lead.fieldCompany}),$("*").is("#call-us-container-form-country")&&Lead.setFieldObj({fieldId:"call-us-container-form-country"}),$("*").is("#<?php echo $modIdIndustry; //your-order-activity-lead ?>")&&Lead.setFieldObj({fieldId:"<?php echo $modIdIndustry; //your-order-activity-lead ?>",leadName:Lead.fieldIndustry}),$("*").is("#your-order-activity")&&Lead.setFieldObj({fieldId:"your-order-activity"}),$("*").is("#call-us-input-question")&&Lead.setFieldObj({fieldId:"call-us-input-question"}),$("*").is("#your-order-number")&&Lead.setFieldObj({fieldId:"your-order-number"}),$("*").is("#your-order-area")&&Lead.setFieldObj({fieldId:"your-order-area"}),$("*").is("#your-order-final-price")&&Lead.setFieldObj({fieldId:"your-order-final-price"}),$("*").is("#your-order-currency")&&Lead.setFieldObj({fieldId:"your-order-currency"}),$("*").is("#question-whom")&&Lead.setFieldObj({fieldId:"question-whom"}),$("*").is("#em-check")&&Lead.setFieldObj({fieldId:"em-check"}),Lead.submit()};$(document).ready(function(){function e(e){e.removeClass("obligation-error").removeClass("incorrect-error"),e.parent(".call-us-input-error-msg").removeClass("obligation-error").removeClass("incorrect-error")}function r(){$(".call-us-input-error-msg").removeClass("obligation-error").removeClass("incorrect-error");var e=!0,r=$("#<?php echo $modIdName; //call-us-input-name ?>");if(""==$.trim(r.val())?(r.parent().addClass("obligation-error"),e=!1):/^[A-Za-zА-Яа-яЁё\`ґєҐЄ´ІіЇї\s]+$/.test(r.val())||(r.parent().addClass("incorrect-error"),e=!1),$("*").is("#<?php echo $modIdPhone; //call-us-input-phone ?>")){var a=(i=$("#<?php echo $modIdPhone; //call-us-input-phone ?>")).val();a=(a=(a=a.replace(/\s/g,"")).replace(/\-/g,"")).replace(/^"+"/,""),""==$.trim(i.val())?(i.parent().addClass("obligation-error"),e=!1):/\d{8}$/.test(a)?a.length>17&&(i.parent().addClass("incorrect-error"),e=!1):(i.parent().addClass("incorrect-error"),e=!1)}if($("*").is("#call-us-input-phone-simple")){var i=$("#call-us-input-phone-simple"),l=i.val();l=(l=l.replace(/\s/g,"")).replace(/\-/g,""),""==$.trim(l)?(i.parent().addClass("obligation-error"),e=!1):/\d{8}$/.test(l)?l.length>17&&(i.parent().addClass("incorrect-error"),e=!1):(i.parent().addClass("incorrect-error"),e=!1)}var o=$("#<?php echo $modIdEmail; //call-us-input-mail ?>");if(""==$.trim(o.val())?(o.parent().addClass("obligation-error"),e=!1):/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/gim.test(o.val())||(o.parent().addClass("incorrect-error"),e=!1),$("*").is("#<?php echo $modIdIndustry; //your-order-activity-lead ?>")){var s=$("#<?php echo $modIdIndustry; //your-order-activity-lead ?>");""==$.trim(s.val())&&(s.parent().addClass("obligation-error"),e=!1)}if($("*").is("#<?php echo $modIdCompany; //call-us-input-company ?>")){var t=$("#<?php echo $modIdCompany; //call-us-input-company ?>");""==$.trim(t.val())&&(t.parent().addClass("obligation-error"),e=!1)}if($("*").is("#call-us-input-question")){var d=$("#call-us-input-question");""==$.trim(d.val())&&(d.parent().addClass("obligation-error"),e=!1)}return e}$("#call-us-input-submit").off().on("click",function(){var e=$(this);r()&&("undefined"!=typeof emPageFunctions&&emPageFunctions(),$(e).hasClass("em-has-loader")&&($(e).hide(0),$(e).parent().find(".em-loader").show(0)),$("#your-order-form").submit())}),$(".call-us-input-error-msg").off().on("mouseover",function(){e($(this))}),$(".em-flags").off().on("mouseover",function(){e($(this))}),$(".call-us-input-error-msg input").focus(function(){e($(this))}),$(".call-us-input-error-msg select").focus(function(){e($(this))}),$(".call-us-input-error-msg textarea").focus(function(){e($(this))}),$("#<?php echo $modIdPhone; //call-us-input-phone ?>").focus(function(){e($(this))})});
 </script>
-
 
 <script  src='/templates/expertmusic/jquery/js/jquery-1.11.0.min.js'></script>
 <script  src='/templates/expertmusic/jquery/js/jquery-ui-1.10.4.custom.min.js'></script>
