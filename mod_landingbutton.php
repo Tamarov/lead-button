@@ -21,7 +21,7 @@
 	require JModuleHelper::getLayoutPath('mod_custom', $params->get('layout', 'default'));
 
 
-
+//
 	//require JModuleHelper::getLayoutPath('mod_LandingButton', $params->get ('layout', 'default'));
 	
 //	jimport( 'joomla.application.module.helper' ); // подключаем нужный класс, один раз на странице, перед первым выводом
